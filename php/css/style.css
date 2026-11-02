@@ -1,0 +1,190 @@
+/* BlenderSchool – stil v duhu W3Schools z Blenderjevo oranžno barvo */
+:root {
+    --oranzna: #e87d0d;
+    --oranzna-temna: #c4660a;
+    --temna: #23272e;
+    --siva: #f1f1f1;
+    --rob: #ddd;
+    --zelena: #04aa6d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #222;
+    background: #fff;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+a { color: var(--oranzna-temna); }
+
+/* Zgornja vrstica */
+.zgornja-vrstica {
+    background: var(--temna);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.logo { color: #fff; font-size: 22px; font-weight: bold; text-decoration: none; }
+.logo span { color: var(--oranzna); }
+.zgornja-vrstica nav a { color: #fff; text-decoration: none; margin-left: 18px; }
+.zgornja-vrstica nav a:hover { color: var(--oranzna); }
+
+/* Gumbi */
+.gumb, .gumb-mali {
+    display: inline-block;
+    background: var(--oranzna);
+    color: #fff !important;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+.gumb:hover, .gumb-mali:hover { background: var(--oranzna-temna); }
+.gumb-mali { padding: 5px 12px; }
+.gumb-velik { padding: 12px 28px; font-size: 18px; }
+.gumb.dokoncano { background: var(--zelena); }
+.desno { float: right; }
+
+/* Domača stran */
+.hero {
+    background: linear-gradient(135deg, var(--temna), #3b4252);
+    color: #fff;
+    text-align: center;
+    padding: 70px 20px;
+}
+.hero h1 { font-size: 42px; margin: 0 0 10px; }
+.hero p { font-size: 19px; max-width: 650px; margin: 0 auto 25px; }
+
+.vsebina-siroka { max-width: 1100px; margin: 0 auto; padding: 20px; width: 100%; }
+.ozka { max-width: 750px; }
+
+.mreza-kartic {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 18px;
+}
+.kartica {
+    display: block;
+    border: 1px solid var(--rob);
+    border-radius: 6px;
+    padding: 16px;
+    color: inherit;
+    text-decoration: none;
+    transition: box-shadow .2s;
+}
+.kartica:hover { box-shadow: 0 4px 14px rgba(0,0,0,.12); }
+.kartica h3 { margin-top: 0; color: var(--oranzna-temna); }
+.kartica img { width: 100%; height: 170px; object-fit: cover; border-radius: 4px; }
+
+/* Postavitev lekcije: levi meni + vsebina */
+.postavitev { display: flex; flex: 1; }
+.levi-meni {
+    width: 250px;
+    background: var(--siva);
+    padding: 10px 0;
+    flex-shrink: 0;
+    height: calc(100vh - 56px);
+    position: sticky;
+    top: 56px;
+    overflow-y: auto;
+}
+.levi-meni h4 { margin: 14px 16px 4px; font-size: 15px; }
+.levi-meni a {
+    display: block;
+    padding: 4px 16px 4px 24px;
+    color: #222;
+    text-decoration: none;
+    font-size: 14px;
+}
+.levi-meni a:hover { background: #ccc; }
+.levi-meni a.aktivna { background: var(--oranzna); color: #fff; }
+
+.lekcija { flex: 1; padding: 20px 40px; max-width: 900px; }
+.lekcija h1 { font-size: 36px; margin: 10px 0; }
+.navigacija-lekcij { overflow: hidden; margin: 15px 0; }
+
+.napredek-glava { background: var(--siva); padding: 10px 15px; border-radius: 4px; }
+
+.vrstica-napredka { background: #ddd; border-radius: 10px; height: 10px; overflow: hidden; margin: 6px 0; }
+.vrstica-napredka div { background: var(--zelena); height: 100%; transition: width .4s; }
+.vrstica-napredka.velika { height: 22px; }
+
+.gif-prostor {
+    border: 2px dashed var(--rob);
+    color: #888;
+    padding: 40px;
+    text-align: center;
+    border-radius: 6px;
+    margin: 15px 0;
+}
+.gif, .velika-slika { max-width: 100%; border-radius: 6px; margin: 15px 0; }
+
+.besedilo { font-size: 16px; }
+.nasvet {
+    background: #fff4e5;
+    border-left: 5px solid var(--oranzna);
+    padding: 12px 16px;
+    margin: 18px 0;
+}
+
+kbd {
+    background: #fff;
+    border: 1px solid #bbb;
+    border-bottom-width: 3px;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: Consolas, monospace;
+    font-size: 14px;
+}
+
+/* Tabele */
+.tabela { border-collapse: collapse; width: 100%; margin: 15px 0; }
+.tabela th, .tabela td { border-bottom: 1px solid var(--rob); padding: 8px 10px; text-align: left; }
+.tabela th { background: var(--siva); }
+.tabela tr:hover td { background: #fafafa; }
+
+.oznaka { background: var(--siva); border-radius: 10px; padding: 2px 10px; font-size: 13px; }
+.iskalnik { width: 100%; padding: 12px; font-size: 17px; border: 2px solid var(--rob); border-radius: 4px; }
+.iskalnik:focus { border-color: var(--oranzna); outline: none; }
+
+/* Obrazci */
+.obrazec-okvir {
+    max-width: 420px;
+    margin: 40px auto;
+    padding: 25px 30px;
+    border: 1px solid var(--rob);
+    border-radius: 6px;
+    width: 100%;
+}
+.obrazec-okvir.levo { margin: 20px 0 30px; max-width: 500px; }
+label { display: block; margin-bottom: 14px; font-weight: 600; }
+input[type=text], input[type=email], input[type=password], select, textarea {
+    display: block;
+    width: 100%;
+    padding: 9px;
+    margin-top: 4px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    font: inherit;
+}
+.napaka { background: #fde2e1; color: #a12622; padding: 8px 12px; border-radius: 4px; margin-bottom: 10px; }
+
+.komentar { border-bottom: 1px solid var(--rob); padding: 8px 0; }
+.komentar p { margin: 4px 0; }
+.obrazec-komentar { margin-top: 15px; }
+.obrazec-komentar button { margin-top: 8px; }
+
+.noga { background: var(--temna); color: #aaa; text-align: center; padding: 16px; margin-top: auto; font-size: 14px; }
