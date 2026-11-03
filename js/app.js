@@ -7,13 +7,13 @@ const vsebina = () => document.getElementById('aplikacija');
 
 // Slike modulov (upodobljene v Blenderju)
 const SLIKE_MODULOV = {
-    1: 'img/lekcije/zacetna_scena.jpg',
-    2: 'img/lekcije/modeliranje.jpg',
-    3: 'img/lekcije/teksturiranje.jpg',
-    4: 'img/lekcije/materiali.jpg',
-    5: 'img/lekcije/kiparjenje.jpg',
-    6: 'img/projekti/mug_8.jpg',
-    7: 'img/projekti/char_22.jpg',
+    1: 'img/moduli/cover_1.jpg',
+    2: 'img/moduli/cover_2.jpg',
+    3: 'img/moduli/cover_3.jpg',
+    4: 'img/moduli/cover_4.jpg',
+    5: 'img/moduli/cover_5.jpg',
+    6: 'img/moduli/cover_6.jpg',
+    7: 'img/moduli/cover_7.jpg',
 };
 
 // --- Pomožne funkcije ---
@@ -106,7 +106,7 @@ function stranDomov() {
                 </div>
             </div>
             <div class="hero-slika">
-                <img src="img/hero.jpg" alt="A scene with a house and trees, rendered in Blender">
+                <img src="img/hero.jpg" alt="The cute cottage and the low-poly character from the courses, rendered in Blender">
                 <div class="lebdeca-oznaka l1">✔ Lesson complete · <b style="color:#22c55e">+6%</b></div>
                 <div class="lebdeca-oznaka l2"><kbd>G</kbd> <kbd>R</kbd> <kbd>S</kbd> move · rotate · scale</div>
             </div>
