@@ -14,6 +14,7 @@
     --senca: 0 10px 30px rgba(0, 0, 0, 0.35);
     --radij: 16px;
     --hitro: 0.25s cubic-bezier(.2, .8, .2, 1);
+    color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -349,4 +350,21 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--o
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .razkrij { opacity: 1; transform: none; }
+}
+
+/* ---- Step-by-step projects ---- */
+.korak-projekta { display: flex; gap: 18px; margin: 28px 0; padding: 22px; background: var(--povrsina); border: 1px solid var(--rob); border-radius: 16px; }
+.korak-st { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; background: var(--gradient); color: #fff; font-weight: 800; display: grid; place-items: center; font-size: 18px; }
+.korak-vsebina { flex: 1; min-width: 0; }
+.korak-vsebina h3 { margin: 6px 0 10px !important; }
+.korak-vsebina ol { padding-left: 20px; }
+.slika-koraka { display: block; width: 100%; border-radius: 12px; margin-top: 14px; border: 1px solid var(--rob); }
+.besedilo code { font-family: 'JetBrains Mono', monospace; background: var(--povrsina-2); padding: 1px 6px; border-radius: 6px; font-size: .9em; }
+@media (max-width: 700px) {
+    .korak-projekta { flex-direction: column; padding: 16px; gap: 10px; }
+}
+@media (max-width: 700px) {
+    .besedilo .tabela { display: block; overflow-x: auto; }
+    .besedilo .tabela th, .besedilo .tabela td { padding: 8px 10px; }
+    .besedilo code { white-space: nowrap; }
 }

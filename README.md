@@ -1,51 +1,54 @@
 # BlenderSchool
 
-Spletna stran za učenje Blenderja za začetnike v stilu W3Schools, s sledenjem napredku v SQL bazi.
+A W3Schools-style website for learning Blender as a complete beginner, with progress tracking in an SQL database.
 
-**Avtorica:** Sara Šmon · šolski projekt 2026
+**Author:** Sara Šmon · school project 2026
 
-## Dve različici
+## Two versions
 
-| Različica | Kje | Baza |
+| Version | Where | Database |
 |---|---|---|
-| **Spletna (GitHub Pages)** | koren repozitorija (`index.html`) | SQLite, ki teče v brskalniku (sql.js), shranjena v IndexedDB |
-| **Strežniška (PHP)** | mapa `php/` | MySQL, za zagon v XAMPP (navodila v `php/README.md`) |
+| **Web (GitHub Pages)** | repository root (`index.html`) | SQLite running in the browser (sql.js), saved in IndexedDB |
+| **Server (PHP)** | `php/` folder | MySQL, runs in XAMPP (see `php/README.md`) |
 
-Obe uporabljata enake tabele in enake SQL poizvedbe. GitHub Pages ne zna poganjati PHP in MySQL, zato spletna različica bazo izvaja kar v brskalniku. Vsak obiskovalec ima svojo bazo, ki ostane shranjena v njegovem brskalniku.
+Both use the same tables and the same SQL queries. GitHub Pages cannot run PHP or MySQL, so the web version runs the database inside the browser. Every visitor has their own database that stays saved in their browser.
 
-Testni račun: **luka17** / **demo123**
+Test account: **luka17** / **demo123**
 
-## Funkcionalnosti
+## Features
 
-- Registracija in prijava (gesla so zgoščena: PBKDF2 v spletni, bcrypt v PHP različici)
-- 6 modulov, 15 lekcij, levi meni, gumba Prejšnja/Naslednja
-- Gumb »Označi kot dokončano« in odstotek napredka
-- Profil z napredkom po modulih
-- Cheat sheet z 29 bližnjicami in iskalnikom
-- Galerija: nalaganje slike se odklene pri 100 % modula (samo JPG/PNG, do 5 MB), komentarji
-- Stran **SQL baza**: pregled tabel in izvajanje SELECT poizvedb
-- Animacije: prehodi med stranmi, razkrivanje ob drsenju, števci, konfeti ob dokončanem modulu, obvestila
+- Sign up and log in (passwords are hashed: PBKDF2 in the web version, bcrypt in PHP)
+- 6 modules and 18 lessons that teach real tool use (exact keys, settings and exercises), sidebar, Previous/Next
+- 4 guided projects (coffee mug, little house, snowman, cute cottage) with a rendered picture for every step and a finished `.blend` file to compare
+- "Mark as complete" button and progress percentage
+- Profile with progress per module
+- Cheat sheet with 54 shortcuts, search and category filters
+- Gallery: uploading unlocks at 100% of a module (JPG/PNG only, max 5 MB), comments
+- **SQL database** page: see all tables and run SELECT queries live
+- Animations: page transitions, reveal on scroll, counters, confetti, toasts
 
-Vse 3D slike in animacije (GIF) v lekcijah so upodobljene v Blenderju 5.0 (Cycles) posebej za ta projekt.
+All 3D images, GIFs and project step images were rendered in Blender 5.0 (Cycles) for this project.
 
-## Zgradba
+## Structure
 
 ```
-index.html          glavna stran
-css/style.css       izgled
-js/db.js            SQLite baza, shranjevanje, gesla
-js/app.js           strani in uporabniška logika
-js/animacije.js     animacije (razkrivanje, števci, konfeti, obvestila)
-js/vendor/          sql.js (SQLite za brskalnik, licenca MIT)
-db/database.sql     tabele in začetni podatki
-img/                slike in GIF-i lekcij (upodobljeni v Blenderju)
-php/                PHP + MySQL različica
+index.html          main page
+css/style.css       styles
+js/db.js            SQLite database, saving, passwords
+js/app.js           pages and app logic
+js/animacije.js     animations
+js/vendor/          sql.js (SQLite for the browser, MIT license)
+db/database.sql     tables and lesson content
+img/lekcije/        lesson images and GIFs
+img/projekti/       step-by-step project images
+files/              finished .blend files for the projects
+php/                PHP + MySQL version
 ```
 
-## Podatkovni model
+## Data model
 
-- `uporabnik` 1:N `napredek` N:1 `lekcija` N:1 `modul`
-- `uporabnik` 1:N `objava` 1:N `komentar`
-- `bliznjica` (samostojna tabela)
+- `uporabnik` (user) 1:N `napredek` (progress) N:1 `lekcija` (lesson) N:1 `modul` (module)
+- `uporabnik` 1:N `objava` (post) 1:N `komentar` (comment)
+- `bliznjica` (shortcut, standalone table)
 
-Odstotek napredka se izračuna sproti: dokončane lekcije / vse lekcije × 100.
+Progress is calculated live: completed lessons / all lessons × 100.

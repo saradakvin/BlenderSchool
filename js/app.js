@@ -12,7 +12,7 @@ const SLIKE_MODULOV = {
     3: 'img/lekcije/teksturiranje.jpg',
     4: 'img/lekcije/materiali.jpg',
     5: 'img/lekcije/kiparjenje.jpg',
-    6: 'img/lekcije/projekt_scena.jpg',
+    6: 'img/projekti/mug_8.jpg',
 };
 
 // --- Pomožne funkcije ---
@@ -23,11 +23,11 @@ function e(besedilo) { // varen izpis (zaščita pred XSS)
 }
 function datum(niz, zUro = false) {
     const d = new Date(niz.replace(' ', 'T') + 'Z');
-    const s = d.toLocaleDateString('sl-SI');
-    return zUro ? s + ' ' + d.toLocaleTimeString('sl-SI', { hour: '2-digit', minute: '2-digit' }) : s;
+    const s = d.toLocaleDateString('en-GB');
+    return zUro ? s + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : s;
 }
 function prijavljen() {
-    const id = Number(localStorage.getItem('uporabnik_id'));
+    const id = Number(seja.get('uporabnik_id'));
     return id ? ena('SELECT id, uporabnisko_ime, email, datum_registracije FROM uporabnik WHERE id = ?', [id]) : null;
 }
 function pojdi(pot) { location.hash = '#/' + pot; }
@@ -62,14 +62,14 @@ function izrisiGlavo(stran) {
     const u = prijavljen();
     const povezava = (pot, ime) => `<a href="#/${pot}" class="${stran === pot ? 'aktivna-povezava' : ''}">${ime}</a>`;
     document.getElementById('meni').innerHTML = `
-        ${povezava('lekcija', 'Lekcije')}
-        ${povezava('bliznjice', 'Bližnjice')}
-        ${povezava('galerija', 'Galerija')}
-        ${povezava('baza', 'SQL baza')}
+        ${povezava('lekcija', 'Lessons')}
+        ${povezava('bliznjice', 'Shortcuts')}
+        ${povezava('galerija', 'Gallery')}
+        ${povezava('baza', 'SQL database')}
         ${u ? `${povezava('profil', `👤 ${e(u.uporabnisko_ime)}`)}
-               <a href="#/odjava" class="gumb-mali">Odjava</a>`
-            : `${povezava('prijava', 'Prijava')}
-               <a href="#/registracija" class="gumb-mali">Registracija</a>`}`;
+               <a href="#/odjava" class="gumb-mali">Log out</a>`
+            : `${povezava('prijava', 'Log in')}
+               <a href="#/registracija" class="gumb-mali">Sign up</a>`}`;
 }
 
 // =================== STRANI ===================
@@ -89,62 +89,62 @@ function stranDomov() {
         <div class="hero-ozadje"><div class="krog k1"></div><div class="krog k2"></div><div class="krog k3"></div></div>
         <section class="hero">
             <div>
-                <span class="znacka"><i></i> Brezplačno za začetnike</span>
-                <h1>Nauči se <span class="poudarek">Blenderja</span><br>korak za korakom</h1>
-                <p>Kratke in jasne lekcije v stilu W3Schools, cheat sheet bližnjic in trije vodeni projekti. Tvoj napredek se sproti shranjuje v SQL bazo.</p>
+                <span class="znacka"><i></i> Free for beginners</span>
+                <h1>Learn <span class="poudarek">Blender</span><br>step by step</h1>
+                <p>Clear lessons in the style of W3Schools that show you exactly which tools to use, a shortcut cheat sheet and guided projects you build click by click. Your progress is saved in an SQL database.</p>
                 <div class="hero-gumbi">
-                    <a href="#/lekcija" class="gumb gumb-velik">Začni z učenjem »</a>
-                    ${u ? '<a href="#/profil" class="gumb gumb-velik gumb-obroba">Moj napredek</a>'
-                        : '<a href="#/registracija" class="gumb gumb-velik gumb-obroba">Ustvari račun</a>'}
+                    <a href="#/lekcija" class="gumb gumb-velik">Start learning »</a>
+                    ${u ? '<a href="#/profil" class="gumb gumb-velik gumb-obroba">My progress</a>'
+                        : '<a href="#/registracija" class="gumb gumb-velik gumb-obroba">Create account</a>'}
                 </div>
                 <div class="statistika">
-                    <div><b data-stevec="${st.moduli}">0</b><span>modulov</span></div>
-                    <div><b data-stevec="${st.lekcije}">0</b><span>lekcij</span></div>
-                    <div><b data-stevec="${st.bliznjice}">0</b><span>bližnjic</span></div>
-                    <div><b data-stevec="3">0</b><span>projekti</span></div>
+                    <div><b data-stevec="${st.moduli}">0</b><span>modules</span></div>
+                    <div><b data-stevec="${st.lekcije}">0</b><span>lessons</span></div>
+                    <div><b data-stevec="${st.bliznjice}">0</b><span>shortcuts</span></div>
+                    <div><b data-stevec="${vrednost('SELECT COUNT(*) FROM lekcija WHERE id_modula = 6')}">0</b><span>projects</span></div>
                 </div>
             </div>
             <div class="hero-slika">
-                <img src="img/hero.jpg" alt="Scena s hišo in drevesi, upodobljena v Blenderju">
-                <div class="lebdeca-oznaka l1">✔ Lekcija dokončana · <b style="color:#22c55e">+7 %</b></div>
-                <div class="lebdeca-oznaka l2"><kbd>G</kbd> <kbd>R</kbd> <kbd>S</kbd> premik · vrtenje · velikost</div>
+                <img src="img/hero.jpg" alt="A scene with a house and trees, rendered in Blender">
+                <div class="lebdeca-oznaka l1">✔ Lesson complete · <b style="color:#22c55e">+6%</b></div>
+                <div class="lebdeca-oznaka l2"><kbd>G</kbd> <kbd>R</kbd> <kbd>S</kbd> move · rotate · scale</div>
             </div>
         </section>
     </div>
     <main class="vsebina-siroka">
-        <div class="naslov-sekcije razkrij"><h2>Moduli</h2><p>Izberi temo ali pojdi lepo po vrsti.</p></div>
+        <div class="naslov-sekcije razkrij"><h2>Modules</h2><p>Pick a topic or go through them in order.</p></div>
         <div class="mreza-kartic">
         ${moduli.map((m, i) => {
             const p = u ? odstotekNapredka(u.id, m.id) : null;
             return `<a class="kartica razkrij" style="--i:${i}" href="#/modul/${m.id}">
                 <div class="kartica-slika"><img src="${SLIKE_MODULOV[m.id] || 'img/hero.jpg'}" alt="" loading="lazy">
-                    <span class="stevilka">${m.st_lekcij} lekcij</span></div>
+                    <span class="stevilka">${m.st_lekcij} lessons</span></div>
                 <div class="kartica-telo">
                     <h3>${e(m.naslov)}</h3><p>${e(m.opis)}</p>
-                    ${u ? vrstica(p) + `<small>${p} % dokončano</small>` : ''}
+                    ${u ? vrstica(p) + `<small>${p}% complete</small>` : ''}
                 </div>
             </a>`;
         }).join('')}
         </div>
 
-        <div class="naslov-sekcije razkrij"><h2>Kako poteka učenje</h2><p>Trije preprosti koraki do tvojega prvega 3D izdelka.</p></div>
+        <div class="naslov-sekcije razkrij"><h2>How it works</h2><p>Three simple steps to your first 3D model.</p></div>
         <div class="koraki">
-            <div class="korak razkrij" style="--i:0"><div class="ikona">📖</div><h3>Preberi lekcijo</h3><p>Kratka razlaga z animacijo, ki pokaže točno, kaj narediš v Blenderju.</p></div>
-            <div class="korak razkrij" style="--i:1"><div class="ikona">✅</div><h3>Označi kot dokončano</h3><p>Napredek se shrani v SQL bazo in vidiš ga na svojem profilu.</p></div>
-            <div class="korak razkrij" style="--i:2"><div class="ikona">🏆</div><h3>Pokaži svoj izdelek</h3><p>Ko končaš modul, naloži sliko v galerijo in dobi komentarje.</p></div>
+            <div class="korak razkrij" style="--i:0"><div class="ikona">📖</div><h3>Read a lesson</h3><p>Every lesson explains which tools to use and how, with exact keys, settings and a short exercise.</p></div>
+            <div class="korak razkrij" style="--i:1"><div class="ikona">✅</div><h3>Mark it as done</h3><p>Your progress is saved in the SQL database and shown on your profile.</p></div>
+            <div class="korak razkrij" style="--i:2"><div class="ikona">🏆</div><h3>Show your work</h3><p>Finish a module, upload your render to the gallery and get comments.</p></div>
         </div>
 
-        <div class="naslov-sekcije razkrij"><h2>Vodeni projekti</h2><p>Od prazne scene do končne slike.</p></div>
+        <div class="naslov-sekcije razkrij"><h2>Guided projects</h2><p>Build a real model yourself, step by step, with a picture for every step.</p></div>
         <div class="mreza-kartic">
         ${projekti.map((pr, i) => `<a class="kartica razkrij" style="--i:${i}" href="#/lekcija/${pr.id}">
-            <div class="kartica-slika"><img src="${e(pr.slika_gif || 'img/hero.jpg')}" alt="" loading="lazy"><span class="stevilka">Projekt ${i + 1}</span></div>
-            <div class="kartica-telo"><h3>${e(pr.naslov.replace(/^Projekt \d: /, ''))}</h3></div></a>`).join('')}
+            <div class="kartica-slika"><img src="${e(pr.slika_gif || 'img/hero.jpg')}" alt="" loading="lazy"><span class="stevilka">Project ${i + 1}</span></div>
+            <div class="kartica-telo"><h3>${e(pr.naslov.replace(/^Project \d: /, ''))}</h3></div></a>`).join('')}
         </div>
 
         <div class="poziv razkrij">
-            <h2>Pripravljen na prvi render?</h2>
-            <p>Začni z modulom Osnove vmesnika. Traja manj kot 15 minut.</p>
-            <a href="#/modul/1" class="gumb gumb-velik">Začni zdaj »</a>
+            <h2>Ready for your first render?</h2>
+            <p>Start with Interface Basics, or jump straight into the snowman project.</p>
+            <a href="#/modul/1" class="gumb gumb-velik">Start now »</a>
         </div>
     </main>`;
 }
@@ -152,36 +152,36 @@ function stranDomov() {
 function stranRegistracija() {
     vsebina().innerHTML = `
     <main class="obrazec-okvir">
-        <h1>Registracija</h1>
+        <h1>Sign up</h1>
         <div id="napake"></div>
         <form id="obrazec">
-            <label>Uporabniško ime <input type="text" name="ime" required></label>
-            <label>E-pošta <input type="email" name="email" required></label>
-            <label>Geslo <input type="password" name="geslo" required minlength="6"></label>
-            <label>Ponovi geslo <input type="password" name="geslo2" required minlength="6"></label>
-            <button type="submit" class="gumb">Ustvari račun</button>
+            <label>Username <input type="text" name="ime" required></label>
+            <label>Email <input type="email" name="email" required></label>
+            <label>Password <input type="password" name="geslo" required minlength="6"></label>
+            <label>Repeat password <input type="password" name="geslo2" required minlength="6"></label>
+            <button type="submit" class="gumb">Create account</button>
         </form>
-        <p>Že imaš račun? <a href="#/prijava">Prijavi se</a>.</p>
+        <p>Already have an account? <a href="#/prijava">Log in</a>.</p>
     </main>`;
     document.getElementById('obrazec').onsubmit = async (ev) => {
         ev.preventDefault();
         const f = new FormData(ev.target);
         const ime = f.get('ime').trim(), email = f.get('email').trim(), geslo = f.get('geslo');
         const napake = [];
-        if (ime.length < 3) napake.push('Uporabniško ime mora imeti vsaj 3 znake.');
-        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) napake.push('E-poštni naslov ni veljaven.');
-        if (geslo.length < 6) napake.push('Geslo mora imeti vsaj 6 znakov.');
-        if (geslo !== f.get('geslo2')) napake.push('Gesli se ne ujemata.');
+        if (ime.length < 3) napake.push('The username must have at least 3 characters.');
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) napake.push('The email address is not valid.');
+        if (geslo.length < 6) napake.push('The password must have at least 6 characters.');
+        if (geslo !== f.get('geslo2')) napake.push('The passwords do not match.');
         if (!napake.length && vrednost('SELECT COUNT(*) FROM uporabnik WHERE uporabnisko_ime = ? OR email = ?', [ime, email]) > 0)
-            napake.push('Uporabniško ime ali e-pošta že obstaja.');
+            napake.push('This username or email already exists.');
         if (napake.length) {
             document.getElementById('napake').innerHTML = napake.map((n) => `<div class="napaka">${e(n)}</div>`).join('');
             return;
         }
         const id = await izvedi('INSERT INTO uporabnik (uporabnisko_ime, email, geslo_hash) VALUES (?, ?, ?)',
             [ime, email, await zgostiGeslo(geslo)]);
-        localStorage.setItem('uporabnik_id', id);
-        obvestilo(`👋 Dobrodošel/a, <b>${e(ime)}</b>! Začniva s prvo lekcijo.`);
+        seja.set('uporabnik_id', id);
+        obvestilo(`👋 Welcome, <b>${e(ime)}</b>! Let's start with the first lesson.`);
         pojdi('lekcija');
     };
 }
@@ -189,15 +189,15 @@ function stranRegistracija() {
 function stranPrijava() {
     vsebina().innerHTML = `
     <main class="obrazec-okvir">
-        <h1>Prijava</h1>
+        <h1>Log in</h1>
         <div id="napake"></div>
         <form id="obrazec">
-            <label>Uporabniško ime ali e-pošta <input type="text" name="ime" required></label>
-            <label>Geslo <input type="password" name="geslo" required></label>
-            <button type="submit" class="gumb">Prijava</button>
+            <label>Username or email <input type="text" name="ime" required></label>
+            <label>Password <input type="password" name="geslo" required></label>
+            <button type="submit" class="gumb">Log in</button>
         </form>
-        <p>Nimaš računa? <a href="#/registracija">Registriraj se</a>.</p>
-        <p class="nasvet">Testni račun: <b>luka17</b> / <b>demo123</b></p>
+        <p>No account yet? <a href="#/registracija">Sign up</a>.</p>
+        <p class="nasvet">Test account: <b>luka17</b> / <b>demo123</b></p>
     </main>`;
     document.getElementById('obrazec').onsubmit = async (ev) => {
         ev.preventDefault();
@@ -205,11 +205,11 @@ function stranPrijava() {
         const ime = f.get('ime').trim();
         const u = ena('SELECT * FROM uporabnik WHERE uporabnisko_ime = ? OR email = ?', [ime, ime]);
         if (u && await preveriGeslo(f.get('geslo'), u.geslo_hash)) {
-            localStorage.setItem('uporabnik_id', u.id);
-            obvestilo(`👋 Pozdravljen/a nazaj, <b>${e(u.uporabnisko_ime)}</b>!`);
+            seja.set('uporabnik_id', u.id);
+            obvestilo(`👋 Welcome back, <b>${e(u.uporabnisko_ime)}</b>!`);
             pojdi('lekcija');
         } else {
-            document.getElementById('napake').innerHTML = '<div class="napaka">Napačno uporabniško ime ali geslo.</div>';
+            document.getElementById('napake').innerHTML = '<div class="napaka">Wrong username or password.</div>';
         }
     };
 }
@@ -219,7 +219,7 @@ function stranLekcija(idLekcije, idModula) {
     if (idLekcije) lekcija = ena('SELECT * FROM lekcija WHERE id = ?', [idLekcije]);
     else if (idModula) lekcija = ena('SELECT * FROM lekcija WHERE id_modula = ? ORDER BY vrstni_red LIMIT 1', [idModula]);
     else lekcija = ena('SELECT l.* FROM lekcija l JOIN modul m ON m.id = l.id_modula ORDER BY m.vrstni_red, l.vrstni_red LIMIT 1');
-    if (!lekcija) { vsebina().innerHTML = '<main class="vsebina-siroka"><h1>Lekcija ne obstaja.</h1></main>'; return; }
+    if (!lekcija) { vsebina().innerHTML = '<main class="vsebina-siroka"><h1>This lesson does not exist.</h1></main>'; return; }
 
     const u = prijavljen();
     const moduli = poizvedba('SELECT * FROM modul ORDER BY vrstni_red');
@@ -231,8 +231,8 @@ function stranLekcija(idLekcije, idModula) {
     const dokoncane = u ? dokoncaneLekcije(u.id) : [];
     const jeDokoncana = dokoncane.includes(lekcija.id);
     const navigacija = `<div class="navigacija-lekcij">
-        ${prejsnja ? `<a class="gumb gumb-obroba" href="#/lekcija/${prejsnja}">« Prejšnja</a>` : ''}
-        ${naslednja ? `<a class="gumb desno" href="#/lekcija/${naslednja}">Naslednja »</a>` : ''}</div>`;
+        ${prejsnja ? `<a class="gumb gumb-obroba" href="#/lekcija/${prejsnja}">« Previous</a>` : ''}
+        ${naslednja ? `<a class="gumb desno" href="#/lekcija/${naslednja}">Next »</a>` : ''}</div>`;
     const skupaj = u ? odstotekNapredka(u.id) : 0;
 
     vsebina().innerHTML = `
@@ -243,16 +243,16 @@ function stranLekcija(idLekcije, idModula) {
                 ${dokoncane.includes(l.id) ? '<span class="kljukica">✔</span>' : ''}<span>${e(l.naslov)}</span></a>`).join('')).join('')}
         </aside>
         <main class="lekcija">
-            ${u ? `<div class="napredek-glava">Napredek tečaja: <b id="odstotek">${skupaj}</b> %${vrstica(skupaj, 'vrstica')}</div>` : ''}
-            <div class="drobtine">${e(modul.naslov)} · lekcija ${poz + 1} od ${vrsta.length}</div>
+            ${u ? `<div class="napredek-glava">Course progress: <b id="odstotek">${skupaj}</b>%${vrstica(skupaj, 'vrstica')}</div>` : ''}
+            <div class="drobtine">${e(modul.naslov)} · lesson ${poz + 1} of ${vrsta.length}</div>
             <h1>${e(lekcija.naslov)}</h1>
             ${lekcija.slika_gif
                 ? `<img class="gif" src="${e(lekcija.slika_gif)}" alt="${e(lekcija.naslov)}">`
-                : '<div class="gif-prostor">Prostor za GIF / sliko (stolpec slika_gif v tabeli lekcija)</div>'}
+                : '<div class="gif-prostor">Image or GIF goes here (column slika_gif in table lekcija)</div>'}
             <div class="besedilo">${lekcija.vsebina.replaceAll('galerija.php', '#/galerija')}</div>
             ${u ? `<button id="gumb-dokoncaj" class="gumb gumb-velik ${jeDokoncana ? 'dokoncano' : ''}">
-                    ${jeDokoncana ? '✔ Dokončano' : 'Označi kot dokončano'}</button>`
-                : '<p class="nasvet"><a href="#/prijava">Prijavi se</a>, da se tvoj napredek shranjuje.</p>'}
+                    ${jeDokoncana ? '✔ Completed' : 'Mark as complete'}</button>`
+                : '<p class="nasvet"><a href="#/prijava">Log in</a> to save your progress.</p>'}
             ${navigacija}
         </main>
     </div>`;
@@ -267,7 +267,7 @@ function stranLekcija(idLekcije, idModula) {
         if (zdaj) await izvedi('DELETE FROM napredek WHERE id_uporabnika = ? AND id_lekcije = ?', [u.id, lekcija.id]);
         else await izvedi('INSERT INTO napredek (id_uporabnika, id_lekcije) VALUES (?, ?)', [u.id, lekcija.id]);
         const p = odstotekNapredka(u.id);
-        gumb.textContent = zdaj ? 'Označi kot dokončano' : '✔ Dokončano';
+        gumb.textContent = zdaj ? 'Mark as complete' : '✔ Completed';
         gumb.classList.toggle('dokoncano', !zdaj);
         gumb.classList.remove('pop'); void gumb.offsetWidth; gumb.classList.add('pop');
         gumb.disabled = false;
@@ -278,9 +278,9 @@ function stranLekcija(idLekcije, idModula) {
         if (!zdaj) {
             if (odstotekNapredka(u.id, lekcija.id_modula) === 100) {
                 konfeti();
-                obvestilo(`🏆 <b>Bravo!</b> Dokončal/a si modul »${e(modul.naslov)}«. V <a href="#/galerija">galeriji</a> lahko zdaj naložiš svoj izdelek.`, 6000);
+                obvestilo(`🏆 <b>Well done!</b> You finished the module “${e(modul.naslov)}”. You can now upload your work to the <a href="#/galerija">gallery</a>.`, 6000);
             } else {
-                obvestilo(`✔ Lekcija dokončana. Skupni napredek: <b>${p} %</b>`);
+                obvestilo(`✔ Lesson complete. Total progress: <b>${p}%</b>`);
             }
         }
     };
@@ -299,30 +299,30 @@ function stranProfil() {
     <main class="vsebina-siroka">
         <div class="profil-glava">
             ${avatar(u.uporabnisko_ime)}
-            <div><h1>${e(u.uporabnisko_ime)}</h1><p>${e(u.email)} · član od ${datum(u.datum_registracije)}</p></div>
+            <div><h1>${e(u.uporabnisko_ime)}</h1><p>${e(u.email)} · member since ${datum(u.datum_registracije)}</p></div>
             <div class="krog-napredka">
                 <svg viewBox="0 0 130 130"><circle class="ozadje-kroga" cx="65" cy="65" r="55"/>
                 <circle class="polnilo" cx="65" cy="65" r="55" data-odstotek="${skupaj}"/></svg>
                 <b><span data-stevec="${skupaj}">0</span>%</b>
             </div>
         </div>
-        <h2>Napredek po modulih</h2>
-        <table class="tabela"><tr><th>Modul</th><th>Napredek</th><th></th></tr>
+        <h2>Progress by module</h2>
+        <table class="tabela"><tr><th>Module</th><th>Progress</th><th></th></tr>
         ${moduli.map((m) => {
             const p = odstotekNapredka(u.id, m.id);
             return `<tr><td><a href="#/modul/${m.id}">${e(m.naslov)}</a></td>
-                <td style="width:50%">${vrstica(p)}</td><td>${p} %${p === 100 ? ' 🏆' : ''}</td></tr>`;
+                <td style="width:50%">${vrstica(p)}</td><td>${p}%${p === 100 ? ' 🏆' : ''}</td></tr>`;
         }).join('')}
         </table>
-        <h2>Nazadnje dokončano</h2>
+        <h2>Recently completed</h2>
         ${zadnje.length ? `<ul>${zadnje.map((z) => `<li><a href="#/lekcija/${z.id}">${e(z.naslov)}</a>
             <small style="color:var(--sivo)">(${datum(z.datum_dokoncanja, true)})</small></li>`).join('')}</ul>`
-            : '<p>Še nisi dokončal/a nobene lekcije. <a href="#/lekcija">Začni zdaj!</a></p>'}
-        <h2>Moje objave</h2>
+            : '<p>You have not completed any lessons yet. <a href="#/lekcija">Start now!</a></p>'}
+        <h2>My posts</h2>
         ${objave.length ? `<div class="mreza-kartic">${objave.map((o, i) => `<a class="kartica razkrij" style="--i:${i}" href="#/objava/${o.id}">
             <div class="kartica-slika"><img src="${e(o.pot_do_slike)}" alt=""></div>
             <div class="kartica-telo"><p>${e(o.besedilo)}</p></div></a>`).join('')}</div>`
-            : '<p>Ko dokončaš modul, lahko v <a href="#/galerija">galerijo</a> naložiš sliko svojega izdelka.</p>'}
+            : '<p>When you finish a module you can upload a picture of your work to the <a href="#/galerija">gallery</a>.</p>'}
     </main>`;
 }
 
@@ -331,16 +331,16 @@ function stranBliznjice() {
     const kategorije = [...new Set(b.map((x) => x.kategorija))];
     vsebina().innerHTML = `
     <main class="vsebina-siroka">
-        <div class="naslov-sekcije"><h2>Cheat sheet: Blender bližnjice</h2><p>Vpiši tipko ali opis, ali izberi kategorijo.</p></div>
-        <input type="search" id="iskalnik" class="iskalnik" placeholder="Išči, npr. extrude ali Ctrl …">
-        <div class="filtri"><button class="aktiven" data-kat="">Vse</button>
+        <div class="naslov-sekcije"><h2>Cheat sheet: Blender shortcuts</h2><p>Type a key or a description, or pick a category.</p></div>
+        <input type="search" id="iskalnik" class="iskalnik" placeholder="Search, e.g. extrude or Ctrl …">
+        <div class="filtri"><button class="aktiven" data-kat="">All</button>
             ${kategorije.map((k) => `<button data-kat="${e(k)}">${e(k)}</button>`).join('')}</div>
         <div class="mreza-bliznjic">
         ${b.map((x, i) => `<div class="bliznjica razkrij" style="--i:${i % 9}" data-kat="${e(x.kategorija)}">
             <div class="tipke">${x.tipka.split(' + ').map((t) => `<kbd>${e(t)}</kbd>`).join(' + ')}</div>
             <p>${e(x.opis)}</p><span><span class="oznaka">${e(x.kategorija)}</span></span></div>`).join('')}
         </div>
-        <p id="ni-zadetkov" hidden>Ni zadetkov.</p>
+        <p id="ni-zadetkov" hidden>No results.</p>
     </main>`;
     const isk = document.getElementById('iskalnik');
     let kategorija = '';
@@ -382,28 +382,28 @@ function stranGalerija() {
          FROM objava o JOIN uporabnik u ON u.id = o.id_uporabnika JOIN modul m ON m.id = o.id_modula
          ORDER BY o.datum DESC, o.id DESC`);
     let obrazec;
-    if (!u) obrazec = '<p class="nasvet"><a href="#/prijava">Prijavi se</a> in dokončaj modul, da lahko naložiš svoj izdelek.</p>';
-    else if (!dokoncaniModuli.length) obrazec = '<p class="nasvet">🔒 Nalaganje slike se odklene, ko dokončaš vse lekcije v vsaj enem modulu.</p>';
+    if (!u) obrazec = '<p class="nasvet"><a href="#/prijava">Log in</a> and finish a module to upload your work.</p>';
+    else if (!dokoncaniModuli.length) obrazec = '<p class="nasvet">🔒 Uploading unlocks when you complete all lessons in at least one module.</p>';
     else obrazec = `
         <div class="obrazec-okvir levo">
-            <h2 style="margin-top:0">Naloži svoj izdelek</h2><div id="napake"></div>
+            <h2 style="margin-top:0">Upload your work</h2><div id="napake"></div>
             <form id="obrazec">
-                <label>Modul <select name="modul">${dokoncaniModuli.map((m) => `<option value="${m.id}">${e(m.naslov)}</option>`).join('')}</select></label>
-                <label>Slika (JPG ali PNG, največ 5 MB) <input type="file" name="slika" accept="image/jpeg,image/png" required></label>
-                <label>Opis <textarea name="besedilo" rows="3"></textarea></label>
-                <button type="submit" class="gumb">Objavi</button>
+                <label>Module <select name="modul">${dokoncaniModuli.map((m) => `<option value="${m.id}">${e(m.naslov)}</option>`).join('')}</select></label>
+                <label>Image (JPG or PNG, max 5 MB) <input type="file" name="slika" accept="image/jpeg,image/png" required></label>
+                <label>Description <textarea name="besedilo" rows="3"></textarea></label>
+                <button type="submit" class="gumb">Publish</button>
             </form>
         </div>`;
     vsebina().innerHTML = `
     <main class="vsebina-siroka">
-        <div class="naslov-sekcije"><h2>Galerija izdelkov</h2><p>Izdelki uporabnikov, ki so dokončali modul.</p></div>
+        <div class="naslov-sekcije"><h2>Gallery</h2><p>Work by learners who finished a module.</p></div>
         ${obrazec}
         <div class="mreza-kartic">
         ${objave.map((o, i) => `<a class="kartica razkrij" style="--i:${i}" href="#/objava/${o.id}">
-            <div class="kartica-slika"><img src="${e(o.pot_do_slike)}" alt="Izdelek uporabnika ${e(o.uporabnisko_ime)}" loading="lazy"></div>
+            <div class="kartica-slika"><img src="${e(o.pot_do_slike)}" alt="Work by ${e(o.uporabnisko_ime)}" loading="lazy"></div>
             <div class="kartica-telo">
                 <div>${avatar(o.uporabnisko_ime)}<b>${e(o.uporabnisko_ime)}</b> · <span class="oznaka">${e(o.modul)}</span></div>
-                <p>${e(o.besedilo)}</p><small>💬 ${o.st_komentarjev}</small></div></a>`).join('') || '<p>Ni še objav. Bodi prvi!</p>'}
+                <p>${e(o.besedilo)}</p><small>💬 ${o.st_komentarjev}</small></div></a>`).join('') || '<p>No posts yet. Be the first!</p>'}
         </div>
     </main>`;
     const f = document.getElementById('obrazec');
@@ -413,15 +413,15 @@ function stranGalerija() {
         const datoteka = podatki.get('slika');
         const napaka = (t) => document.getElementById('napake').innerHTML = `<div class="napaka">${e(t)}</div>`;
         const idModula = Number(podatki.get('modul'));
-        if (!dokoncaniModuli.some((m) => m.id === idModula)) return napaka('Sliko lahko oddaš samo za modul, ki si ga dokončal/a 100 %.');
-        if (datoteka.size > 5 * 1024 * 1024) return napaka('Slika je prevelika (največ 5 MB).');
+        if (!dokoncaniModuli.some((m) => m.id === idModula)) return napaka('You can only post for a module you completed 100%.');
+        if (datoteka.size > 5 * 1024 * 1024) return napaka('The image is too large (max 5 MB).');
         const tip = await vrstaSlike(datoteka);
-        if (!tip) return napaka('Dovoljeni so samo JPG in PNG.');
+        if (!tip) return napaka('Only JPG and PNG files are allowed.');
         // Slika se shrani v bazo kot data URL (na GitHub Pages ni strežnika za datoteke)
         const url = await new Promise((ok) => { const r = new FileReader(); r.onload = () => ok(r.result); r.readAsDataURL(datoteka); });
         const id = await izvedi('INSERT INTO objava (id_uporabnika, id_modula, pot_do_slike, besedilo) VALUES (?, ?, ?, ?)',
             [u.id, idModula, url, podatki.get('besedilo').trim()]);
-        obvestilo('📸 Tvoj izdelek je objavljen!');
+        obvestilo('📸 Your work is published!');
         pojdi('objava/' + id);
     };
 }
@@ -429,23 +429,23 @@ function stranGalerija() {
 function stranObjava(id) {
     const o = ena(`SELECT o.*, u.uporabnisko_ime, m.naslov AS modul FROM objava o
         JOIN uporabnik u ON u.id = o.id_uporabnika JOIN modul m ON m.id = o.id_modula WHERE o.id = ?`, [id]);
-    if (!o) { vsebina().innerHTML = '<main class="vsebina-siroka"><h1>Objava ne obstaja.</h1></main>'; return; }
+    if (!o) { vsebina().innerHTML = '<main class="vsebina-siroka"><h1>This post does not exist.</h1></main>'; return; }
     const komentarji = poizvedba(`SELECT k.*, u.uporabnisko_ime FROM komentar k JOIN uporabnik u ON u.id = k.id_uporabnika
         WHERE k.id_objave = ? ORDER BY k.datum, k.id`, [id]);
     const u = prijavljen();
     vsebina().innerHTML = `
     <main class="vsebina-siroka ozka">
-        <p><a href="#/galerija">« Nazaj na galerijo</a></p>
+        <p><a href="#/galerija">« Back to the gallery</a></p>
         <img class="velika-slika" src="${e(o.pot_do_slike)}" alt="">
         <p>${avatar(o.uporabnisko_ime)}<b>${e(o.uporabnisko_ime)}</b> · <span class="oznaka">${e(o.modul)}</span> · <small style="color:var(--sivo)">${datum(o.datum)}</small></p>
         <p>${e(o.besedilo).replaceAll('\n', '<br>')}</p>
-        <h2>Komentarji (${komentarji.length})</h2>
+        <h2>Comments (${komentarji.length})</h2>
         ${komentarji.map((k, i) => `<div class="komentar" style="animation-delay:${i * 80}ms">${avatar(k.uporabnisko_ime)}<b>${e(k.uporabnisko_ime)}</b> <small>${datum(k.datum, true)}</small>
             <p>${e(k.besedilo).replaceAll('\n', '<br>')}</p></div>`).join('')}
         ${u ? `<form id="obrazec" class="obrazec-komentar">
-                <textarea name="besedilo" rows="3" placeholder="Napiši komentar …" required></textarea>
-                <button type="submit" class="gumb">Objavi komentar</button></form>`
-            : '<p><a href="#/prijava">Prijavi se</a> za komentiranje.</p>'}
+                <textarea name="besedilo" rows="3" placeholder="Write a comment …" required></textarea>
+                <button type="submit" class="gumb">Post comment</button></form>`
+            : '<p><a href="#/prijava">Log in</a> to comment.</p>'}
     </main>`;
     const f = document.getElementById('obrazec');
     if (f) f.onsubmit = async (ev) => {
@@ -454,7 +454,7 @@ function stranObjava(id) {
         if (besedilo) await izvedi('INSERT INTO komentar (id_objave, id_uporabnika, besedilo) VALUES (?, ?, ?)', [id, u.id, besedilo]);
         stranObjava(id);
         poIzrisu();
-        obvestilo('💬 Komentar objavljen.');
+        obvestilo('💬 Comment posted.');
     };
 }
 
@@ -463,25 +463,25 @@ function stranBaza() {
     const tabele = poizvedba("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%' ORDER BY name");
     vsebina().innerHTML = `
     <main class="vsebina-siroka">
-        <div class="naslov-sekcije"><h2>SQL baza</h2><p>Aplikacija uporablja SQLite bazo, ki teče v tvojem brskalniku (sql.js). Tu lahko izvedeš SELECT poizvedbo.</p></div>
-        <table class="tabela"><tr><th>Tabela</th><th>Število vrstic</th></tr>
+        <div class="naslov-sekcije"><h2>SQL database</h2><p>The app uses an SQLite database that runs in your browser (sql.js). You can run a SELECT query here.</p></div>
+        <table class="tabela"><tr><th>Table</th><th>Rows</th></tr>
         ${tabele.map((t) => `<tr><td><a href="#" data-tabela="${t.name}">${t.name}</a></td>
             <td>${vrednost(`SELECT COUNT(*) FROM ${t.name}`)}</td></tr>`).join('')}
         </table>
         <textarea id="sql" rows="4" class="sql-polje">SELECT u.uporabnisko_ime, COUNT(n.id_lekcije) AS dokoncanih
 FROM uporabnik u LEFT JOIN napredek n ON n.id_uporabnika = u.id
 GROUP BY u.id;</textarea>
-        <button id="izvedi" class="gumb">Izvedi poizvedbo</button>
+        <button id="izvedi" class="gumb">Run query</button>
         <div id="rezultat"></div>
-        <p style="margin-top:40px"><button id="ponastavi" class="gumb-mali">Ponastavi bazo na začetno stanje</button></p>
+        <p style="margin-top:40px"><button id="ponastavi" class="gumb-mali">Reset the database to its starting state</button></p>
     </main>`;
     const zazeni = () => {
         const sql = document.getElementById('sql').value.trim();
         const r = document.getElementById('rezultat');
-        if (!/^select\b/i.test(sql)) { r.innerHTML = '<div class="napaka">Tu so dovoljene samo SELECT poizvedbe.</div>'; return; }
+        if (!/^select\b/i.test(sql)) { r.innerHTML = '<div class="napaka">Only SELECT queries are allowed here.</div>'; return; }
         try {
             const vrstice = poizvedba(sql);
-            if (!vrstice.length) { r.innerHTML = '<p>Ni rezultatov.</p>'; return; }
+            if (!vrstice.length) { r.innerHTML = '<p>No results.</p>'; return; }
             const stolpci = Object.keys(vrstice[0]);
             r.innerHTML = `<table class="tabela stran-vstop"><tr>${stolpci.map((s) => `<th>${e(s)}</th>`).join('')}</tr>
                 ${vrstice.slice(0, 100).map((v) => `<tr>${stolpci.map((s) => `<td>${e(String(v[s] ?? '').slice(0, 80))}</td>`).join('')}</tr>`).join('')}</table>`;
@@ -495,8 +495,12 @@ GROUP BY u.id;</textarea>
         document.getElementById('sql').value = `SELECT * FROM ${a.dataset.tabela} LIMIT 20;`;
         zazeni();
     });
-    document.getElementById('ponastavi').onclick = () => {
-        if (confirm('Res želiš izbrisati vse račune in napredek v tem brskalniku?')) ponastaviBazo();
+    // Two clicks instead of confirm(), which some embedded previews block
+    const ponastavi = document.getElementById('ponastavi');
+    ponastavi.onclick = () => {
+        if (ponastavi.dataset.potrdi) { ponastaviBazo(); return; }
+        ponastavi.dataset.potrdi = '1';
+        ponastavi.textContent = 'Click again to delete all accounts and progress in this browser';
     };
 }
 
@@ -504,8 +508,8 @@ GROUP BY u.id;</textarea>
 function usmeri() {
     const [stran, id] = location.hash.replace(/^#\/?/, '').split('/');
     if (stran === 'odjava') {
-        localStorage.removeItem('uporabnik_id');
-        obvestilo('Odjavljen/a si. Se vidiva!');
+        seja.remove('uporabnik_id');
+        obvestilo('You are logged out. See you soon!');
         pojdi('');
         return;
     }
@@ -530,5 +534,5 @@ zazeniBazo().then(() => {
     window.addEventListener('hashchange', usmeri);
     usmeri();
 }).catch((err) => {
-    vsebina().innerHTML = `<main class="vsebina-siroka"><div class="napaka">Napaka pri zagonu baze: ${e(err.message)}</div></main>`;
+    vsebina().innerHTML = `<main class="vsebina-siroka"><div class="napaka">Could not start the database: ${e(err.message)}</div></main>`;
 });

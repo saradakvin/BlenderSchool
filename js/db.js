@@ -4,7 +4,7 @@
 // IndexedDB, da napredek ostane tudi po zaprtju brskalnika.
 // ===================================================================
 
-const DB_KLJUC = 'blenderschool-db-v2';
+const DB_KLJUC = 'blenderschool-db-v4';
 let db = null;
 
 // --- IndexedDB: shranjevanje celotne baze kot binarne datoteke ---
@@ -17,24 +17,42 @@ function odpriShrambo() {
     });
 }
 
+// Če brskalnik shranjevanja ne dovoli (npr. zasebno okno), baza deluje samo v pomnilniku.
 async function preberiShranjeno() {
-    const s = await odpriShrambo();
-    return new Promise((ok) => {
-        const z = s.transaction('baza').objectStore('baza').get(DB_KLJUC);
-        z.onsuccess = () => ok(z.result || null);
-        z.onerror = () => ok(null);
-    });
+    try {
+        const s = await odpriShrambo();
+        return await new Promise((ok) => {
+            const z = s.transaction('baza').objectStore('baza').get(DB_KLJUC);
+            z.onsuccess = () => ok(z.result || null);
+            z.onerror = () => ok(null);
+        });
+    } catch {
+        return null;
+    }
 }
 
 async function shraniBazo() {
-    const s = await odpriShrambo();
-    const podatki = db.export();
-    return new Promise((ok) => {
-        const t = s.transaction('baza', 'readwrite');
-        t.objectStore('baza').put(podatki, DB_KLJUC);
-        t.oncomplete = ok;
-    });
+    try {
+        const s = await odpriShrambo();
+        const podatki = db.export();
+        await new Promise((ok) => {
+            const t = s.transaction('baza', 'readwrite');
+            t.objectStore('baza').put(podatki, DB_KLJUC);
+            t.oncomplete = ok;
+            t.onerror = ok;
+        });
+    } catch {
+        // shranjevanje ni na voljo
+    }
 }
+
+// Prijavljeni uporabnik (localStorage z rezervo v pomnilniku)
+const seja = {
+    rezerva: {},
+    get(k) { try { return localStorage.getItem(k); } catch { return this.rezerva[k] ?? null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch { this.rezerva[k] = String(v); } },
+    remove(k) { try { localStorage.removeItem(k); } catch { delete this.rezerva[k]; } },
+};
 
 // --- Zagon baze ---
 async function zazeniBazo() {
@@ -53,13 +71,17 @@ async function zazeniBazo() {
 }
 
 async function ponastaviBazo() {
-    const s = await odpriShrambo();
-    await new Promise((ok) => {
-        const t = s.transaction('baza', 'readwrite');
-        t.objectStore('baza').delete(DB_KLJUC);
-        t.oncomplete = ok;
-    });
-    localStorage.removeItem('uporabnik_id');
+    try {
+        const s = await odpriShrambo();
+        await new Promise((ok) => {
+            const t = s.transaction('baza', 'readwrite');
+            t.objectStore('baza').delete(DB_KLJUC);
+            t.oncomplete = ok;
+        });
+    } catch {
+        // shranjevanje ni na voljo
+    }
+    seja.remove('uporabnik_id');
     location.hash = '#/';
     location.reload();
 }
@@ -121,13 +143,13 @@ async function preveriGeslo(geslo, shranjeno) {
 // --- Primer objave, da galerija ob prvem obisku ni prazna ---
 async function vstaviPrimerneObjave() {
     db.run('INSERT INTO uporabnik (uporabnisko_ime, email, geslo_hash) VALUES (?, ?, ?)',
-        ['marko', 'marko@primer.si', await zgostiGeslo('demo123')]);
+        ['marko', 'marko@example.com', await zgostiGeslo('demo123')]);
     db.run('INSERT INTO uporabnik (uporabnisko_ime, email, geslo_hash) VALUES (?, ?, ?)',
-        ['luka17', 'luka@primer.si', await zgostiGeslo('demo123')]);
+        ['luka17', 'luka@example.com', await zgostiGeslo('demo123')]);
     db.run('INSERT INTO objava (id_uporabnika, id_modula, pot_do_slike, besedilo) VALUES (1, 1, ?, ?)',
-        ['img/hisa.jpg', 'Moja prva hiša v Blenderju!']);
+        ['img/hisa.jpg', 'My first house in Blender!']);
     db.run('INSERT INTO komentar (id_objave, id_uporabnika, besedilo) VALUES (1, 2, ?)',
-        ['Super izgleda, kako si naredil streho?']);
+        ['Looks great! How did you make the roof?']);
     db.run('INSERT INTO komentar (id_objave, id_uporabnika, besedilo) VALUES (1, 1, ?)',
-        ['Hvala! Zgornji rob kocke sem zmanjšal s tipko S.']);
+        ['Thanks! I extruded the top face and scaled it to zero on Y (S Y 0).']);
 }
