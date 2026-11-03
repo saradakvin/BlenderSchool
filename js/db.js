@@ -4,7 +4,7 @@
 // IndexedDB, da napredek ostane tudi po zaprtju brskalnika.
 // ===================================================================
 
-const DB_KLJUC = 'blenderschool-db-v4';
+const DB_KLJUC = 'blenderschool-db-v6';
 let db = null;
 
 // --- IndexedDB: shranjevanje celotne baze kot binarne datoteke ---
@@ -147,9 +147,9 @@ async function vstaviPrimerneObjave() {
     db.run('INSERT INTO uporabnik (uporabnisko_ime, email, geslo_hash) VALUES (?, ?, ?)',
         ['luka17', 'luka@example.com', await zgostiGeslo('demo123')]);
     db.run('INSERT INTO objava (id_uporabnika, id_modula, pot_do_slike, besedilo) VALUES (1, 1, ?, ?)',
-        ['img/hisa.jpg', 'My first house in Blender!']);
+        ['img/projekti/cute_13.jpg', 'My first cottage in Blender!']);
     db.run('INSERT INTO komentar (id_objave, id_uporabnika, besedilo) VALUES (1, 2, ?)',
-        ['Looks great! How did you make the roof?']);
+        ['So cute! How did you make the roof tiles?']);
     db.run('INSERT INTO komentar (id_objave, id_uporabnika, besedilo) VALUES (1, 1, ?)',
-        ['Thanks! I extruded the top face and scaled it to zero on Y (S Y 0).']);
+        ['Thanks! It is one strip with an Array modifier, Count 4.']);
 }

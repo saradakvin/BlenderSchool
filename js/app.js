@@ -13,6 +13,7 @@ const SLIKE_MODULOV = {
     4: 'img/lekcije/materiali.jpg',
     5: 'img/lekcije/kiparjenje.jpg',
     6: 'img/projekti/mug_8.jpg',
+    7: 'img/projekti/char_22.jpg',
 };
 
 // --- Pomožne funkcije ---

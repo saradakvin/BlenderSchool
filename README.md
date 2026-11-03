@@ -18,8 +18,9 @@ Test account: **luka17** / **demo123**
 ## Features
 
 - Sign up and log in (passwords are hashed: PBKDF2 in the web version, bcrypt in PHP)
-- 6 modules and 18 lessons that teach real tool use (exact keys, settings and exercises), sidebar, Previous/Next
-- 4 guided projects (coffee mug, little house, snowman, cute cottage) with a rendered picture for every step and a finished `.blend` file to compare
+- 7 modules and 23 lessons that teach real tool use (exact keys, settings and exercises), sidebar, Previous/Next
+- 3 guided projects (coffee mug, cute cottage, snowman) with a rendered picture for every step and a finished `.blend` file to compare
+- 1 long course: Low-Poly Character (6 chapters, 22 steps, about 6 hours) with a render for every step and a finished `.blend` file
 - "Mark as complete" button and progress percentage
 - Profile with progress per module
 - Cheat sheet with 54 shortcuts, search and category filters
